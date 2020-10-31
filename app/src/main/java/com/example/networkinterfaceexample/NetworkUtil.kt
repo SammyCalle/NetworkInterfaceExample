@@ -30,4 +30,21 @@ object NetworkUtil {
         }
         return ""
     }
+    fun getIPAddressIpv4(): String? {
+        try {
+            val interfaces: List<NetworkInterface> = Collections.list(NetworkInterface.getNetworkInterfaces())
+            for (intf in interfaces) {
+                val addrs: List<InetAddress> = Collections.list(intf.inetAddresses)
+                for (addr in addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        val sAddr: String = addr.getHostAddress()
+                        val isIPv4 = sAddr.indexOf(':') < 0
+                        if (isIPv4) return sAddr
+                    }
+                }
+            }
+        } catch (ignored: java.lang.Exception) {
+        }
+        return ""
+    }
 }
